@@ -1,6 +1,7 @@
 import { Contract, Wallet } from 'ethers'
 import { Web3Provider } from 'ethers/providers'
 import { deployContract } from 'ethereum-waffle'
+import { bigNumberify } from 'ethers/utils'
 
 import { expandTo18Decimals } from './utilities'
 
@@ -17,7 +18,7 @@ const overrides = {
 }
 
 export async function factoryFixture(_: Web3Provider, [wallet]: Wallet[]): Promise<FactoryFixture> {
-  const factory = await deployContract(wallet, UniswapV2Factory, [wallet.address], overrides)
+  const factory = await deployContract(wallet, UniswapV2Factory, [wallet.address, bigNumberify(997000)], overrides)
   return { factory }
 }
 
@@ -33,7 +34,9 @@ export async function pairFixture(provider: Web3Provider, [wallet]: Wallet[]): P
   const tokenA = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)], overrides)
   const tokenB = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)], overrides)
 
-  await factory.createPair(tokenA.address, tokenB.address, overrides)
+  console.log(tokenA.address, tokenB.address, wallet.address);
+  await factory.createPair(tokenA.address, tokenB.address, wallet.address, overrides)
+  console.log("Made it to L38")
   const pairAddress = await factory.getPair(tokenA.address, tokenB.address)
   const pair = new Contract(pairAddress, JSON.stringify(UniswapV2Pair.abi), provider).connect(wallet)
 

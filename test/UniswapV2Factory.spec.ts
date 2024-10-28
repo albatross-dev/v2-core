@@ -32,6 +32,7 @@ describe('UniswapV2Factory', () => {
   })
 
   it('feeTo, feeToSetter, allPairsLength', async () => {
+    console.log(await factory.feeBase()); // to test if fee logging works as expected
     expect(await factory.feeTo()).to.eq(AddressZero)
     expect(await factory.feeToSetter()).to.eq(wallet.address)
     expect(await factory.allPairsLength()).to.eq(0)

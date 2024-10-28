@@ -11,7 +11,7 @@ import {
 } from 'ethers/utils'
 
 const PERMIT_TYPEHASH = keccak256(
-  toUtf8Bytes('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)')
+  toUtf8Bytes('Permit(address owner,address spender,uint value,uint nonce,uint deadline)')
 )
 
 export function expandTo18Decimals(n: number): BigNumber {
@@ -21,9 +21,9 @@ export function expandTo18Decimals(n: number): BigNumber {
 function getDomainSeparator(name: string, tokenAddress: string) {
   return keccak256(
     defaultAbiCoder.encode(
-      ['bytes32', 'bytes32', 'bytes32', 'uint256', 'address'],
+      ['bytes32', 'bytes32', 'bytes32', 'uint', 'address'],
       [
-        keccak256(toUtf8Bytes('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)')),
+        keccak256(toUtf8Bytes('EIP712Domain(string name,string version,uint chainId,address verifyingContract)')),
         keccak256(toUtf8Bytes(name)),
         keccak256(toUtf8Bytes('1')),
         1,
@@ -70,7 +70,7 @@ export async function getApprovalDigest(
         DOMAIN_SEPARATOR,
         keccak256(
           defaultAbiCoder.encode(
-            ['bytes32', 'address', 'address', 'uint256', 'uint256', 'uint256'],
+            ['bytes32', 'address', 'address', 'uint', 'uint', 'uint'],
             [PERMIT_TYPEHASH, approve.owner, approve.spender, approve.value, nonce, deadline]
           )
         )
